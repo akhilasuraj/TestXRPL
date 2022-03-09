@@ -28,20 +28,25 @@ const main = async () => {
     const tx = await client.submitAndWait(signed.tx_blob)
 
     // Check transaction results -------------------------------------------------
-    console.log("Transaction result:", tx.result.meta.TransactionResult == "tesSUCCESS" ? "Success" : tx.result.meta.TransactionResult)
+    if (tx.result.meta.TransactionResult == "tesSUCCESS") {
+        console.log("Transaction result:", "Success")
 
-    //Account summary --------------------------------------------------------
-    const response = await client.request({
-        "command": "account_info",
-        "account": "rwkf91Pu2kAQxLexjNTuBjrAAGCiNiQTv7",
-        "ledger_index": "validated"
-    })
-    console.log("Account         : ", prepared.Account)
-    console.log("Destination     : ", prepared.Destination)
-    console.log("Ammount         : ", xrpl.dropsToXrp(prepared.Amount), "XRP")
-    console.log("Transaction fee : ", xrpl.dropsToXrp(prepared.Fee), " XRP")
+        //Account summary --------------------------------------------------------
+        const response = await client.request({
+            "command": "account_info",
+            "account": "rwkf91Pu2kAQxLexjNTuBjrAAGCiNiQTv7",
+            "ledger_index": "validated"
+        })
+        console.log("Account         : ", prepared.Account)
+        console.log("Destination     : ", prepared.Destination)
+        console.log("Ammount         : ", xrpl.dropsToXrp(prepared.Amount), "XRP")
+        console.log("Transaction fee : ", xrpl.dropsToXrp(prepared.Fee), " XRP")
 
-    console.log(`Account balance : ${xrpl.dropsToXrp(response.result.account_data.Balance)} XRP`)
+        console.log(`Account balance : ${xrpl.dropsToXrp(response.result.account_data.Balance)} XRP`)
+    }
+    else {
+        console.log(tx.result.meta.TransactionResult)
+    }
 
 
     client.disconnect()
